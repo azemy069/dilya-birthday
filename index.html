@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#eaf4fd">
+<title>С днём рождения, Диля! 💜</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg-1:#f5fbff; --bg-2:#e3eefb; --bg-3:#dceafb;
+  --ink:#3d4c6e; --ink-soft:#6b7a9c;
+  --purple:#7c3aed; --violet:#a855f7; --lilac:#c4b5fd; --sky:#7dd3fc;
+  --glass:rgba(255,255,255,.62); --glass-br:rgba(124,58,237,.18);
+  --shadow:0 18px 45px -18px rgba(76,29,149,.35);
+  --cw:200px; --ch:256px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  height:100vh;height:100dvh;overflow:hidden;
+  font-family:'Nunito',system-ui,sans-serif;color:var(--ink);
+  background:linear-gradient(180deg,var(--bg-1) 0%,var(--bg-2) 60%,var(--bg-3) 100%);
+}
+button{font-family:inherit;border:none;background:none;cursor:pointer;color:inherit}
+
+/* ---------- ЭКРАНЫ ---------- */
+.screen{
+  position:fixed;inset:0;opacity:0;visibility:hidden;transform:translateY(8%);
+  transition:opacity .55s ease, transform .8s cubic-bezier(.65,0,.35,1), visibility 0s linear .8s;
+}
+.screen.active{
+  opacity:1;visibility:visible;transform:none;
+  transition:opacity .6s ease .12s, transform .9s cubic-bezier(.22,1,.36,1) .08s, visibility 0s;
+}
+#hero.above{transform:translateY(-100%);opacity:1}
+canvas.bg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+
+/* ---------- ЭКРАН 1 ---------- */
+#hero{display:flex;align-items:center;justify-content:center;padding:24px}
+.hero-inner{
+  position:relative;z-index:2;max-width:960px;text-align:center;
+  padding-bottom:15vh;
+  animation:rise 1.1s cubic-bezier(.22,1,.36,1) both .15s;
+}
+@keyframes rise{from{opacity:0;transform:translateY(34px) scale(.97)}to{opacity:1;transform:none}}
+.birthday-chip{
+  display:inline-block;font-family:'Caveat',cursive;font-weight:700;
+  font-size:clamp(1.2rem,3vw,1.6rem);color:var(--purple);
+  background:var(--glass);border:1.5px solid var(--glass-br);border-radius:999px;
+  padding:.35em 1.1em;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:var(--shadow);margin-bottom:clamp(14px,3vh,26px);
+  animation:floaty 4s ease-in-out infinite;
+}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.hero-title{
+  font-family:'Caveat',cursive;font-weight:700;
+  font-size:clamp(2.3rem,6.4vw,4.8rem);line-height:1.14;
+  background:linear-gradient(120deg,#7c3aed 10%,#a855f7 45%,#8b5cf6 80%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  filter:drop-shadow(0 6px 22px rgba(124,58,237,.28));
+}
+.hero-title .accent{display:block;font-size:1.06em}
+
+/* котик */
+#cat-zone{
+  position:absolute;left:50%;bottom:max(10px,env(safe-area-inset-bottom));
+  transform:translateX(-50%);z-index:3;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+}
+#cat-hint{
+  font-family:'Caveat',cursive;font-weight:600;font-size:clamp(1.05rem,2.6vw,1.35rem);
+  color:var(--ink-soft);animation:hintBob 1.6s ease-in-out infinite;
+  user-select:none;pointer-events:none;
+}
+@keyframes hintBob{0%,100%{transform:translateY(0);opacity:.75}50%{transform:translateY(-6px);opacity:1}}
+#cat{
+  width:clamp(104px,22vw,160px);
+  touch-action:none;cursor:grab;user-select:none;
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+  filter:drop-shadow(0 10px 18px rgba(76,29,149,.25));
+}
+#cat:active{cursor:grabbing}
+#cat.no-anim{transition:none}
+#cat.launch{transition:transform .78s cubic-bezier(.55,0,.85,.4);transform:translateY(-118vh) rotate(-9deg)!important}
+#cat svg{width:100%;height:auto;display:block;animation:catBob 3.4s ease-in-out infinite}
+@keyframes catBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+/* ---------- ЭКРАН 2 ---------- */
+#gallery{display:flex;flex-direction:column}
+.topbar{
+  position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 8px;
+}
+.chip{
+  background:var(--glass);border:1.5px solid var(--glass-br);border-radius:999px;
+  padding:.42em 1em;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 8px 22px -12px rgba(76,29,149,.35);
+  font-weight:700;font-size:clamp(.8rem,2.4vw,.95rem);color:var(--ink);
+  transition:transform .25s ease;
+}
+button.chip:hover{transform:translateY(-2px)}
+.chip.title{font-family:'Caveat',cursive;font-size:clamp(1.05rem,3vw,1.4rem);color:var(--purple)}
+#counter{min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+
+/* 3D-сцена: кольцо фото с видом сверху */
+#scene{
+  position:relative;flex:1;min-height:36vh;
+  perspective:1600px;perspective-origin:50% 42%;
+  touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;overflow:hidden;
+}
+#scene:active{cursor:grabbing}
+#tilt{
+  position:absolute;left:50%;top:50%;width:0;height:0;
+  transform:translate(-50%,-50%);
+  perspective:1500px;              /* перспектива внутри кольца */
+  transform-style:flat;            /* карточки ложатся друг за другом (без прорезаний) */
+}
+.card{
+  position:absolute;left:0;top:0;  /* размер и центрирование ставит JS под пропорции фото */
+  transform-style:preserve-3d;will-change:transform,opacity;
+}
+.card3d{position:absolute;inset:0;transform-style:preserve-3d;will-change:transform}
+.face{
+  position:absolute;inset:0;border-radius:14px;overflow:hidden;   /* лёгкое скругление уголков */
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  box-shadow:0 16px 34px -14px rgba(50,40,120,.4);
+}
+.face.front{background:#fff}
+.face.front img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;   /* рамка карточки повторяет пропорции фото, поэтому фото не кропится и не жмётся */
+  display:block;
+}
+.face.back{
+  transform:rotateY(180deg);
+  background:
+    radial-gradient(circle at 22% 26%, rgba(196,181,253,.35) 0 6px, transparent 7px),
+    radial-gradient(circle at 76% 68%, rgba(125,211,252,.35) 0 6px, transparent 7px),
+    linear-gradient(180deg,#fdfcff,#f1ecfd);
+  border:1.5px solid rgba(124,58,237,.22);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+}
+.face.back .b-heart{font-size:clamp(1.1rem,3.4vw,1.6rem);opacity:.85}
+.face.back .b-text{
+  font-family:'Caveat',cursive;font-weight:600;
+  font-size:clamp(.95rem,3vw,1.25rem);color:var(--purple);transform:rotate(-4deg);
+}
+
+/* описание */
+#desc-wrap{
+  position:relative;z-index:5;display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .6s cubic-bezier(.22,1,.36,1);padding:0 14px;
+}
+#desc-wrap.open{grid-template-rows:1fr}
+#desc-clip{overflow:hidden;min-height:0}
+#desc-card{
+  max-width:640px;margin:0 auto 10px;background:var(--glass);
+  border:1.5px solid var(--glass-br);border-radius:20px;padding:14px 20px 16px;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:var(--shadow);text-align:center;
+  opacity:0;transform:translateY(-10px);
+  transition:opacity .4s ease .12s, transform .5s cubic-bezier(.22,1,.36,1) .12s;
+}
+#desc-wrap.open #desc-card{opacity:1;transform:none}
+#desc-label{
+  font-family:'Caveat',cursive;font-weight:700;
+  font-size:clamp(1.05rem,2.8vw,1.3rem);color:var(--violet);display:block;margin-bottom:2px;
+}
+#desc-text{font-weight:600;font-size:clamp(.95rem,2.6vw,1.1rem);line-height:1.5;color:var(--ink)}
+
+/* управление */
+#controls{
+  position:relative;z-index:5;display:flex;align-items:center;justify-content:center;
+  gap:clamp(10px,3vw,22px);padding:2px 14px calc(14px + env(safe-area-inset-bottom));
+}
+.nav-btn{
+  width:clamp(46px,11vw,54px);height:clamp(46px,11vw,54px);border-radius:50%;
+  background:var(--glass);border:1.5px solid var(--glass-br);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 10px 24px -12px rgba(76,29,149,.45);
+  display:grid;place-items:center;transition:transform .2s ease, background .2s ease;flex:none;
+}
+.nav-btn:hover{transform:scale(1.08);background:rgba(255,255,255,.85)}
+.nav-btn:active{transform:scale(.94)}
+.nav-btn svg{width:22px;height:22px;stroke:var(--purple);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+#dots{display:flex;gap:7px;align-items:center;justify-content:center;flex-wrap:nowrap}
+#dots button{
+  width:9px;height:9px;border-radius:50%;background:var(--lilac);opacity:.55;flex:none;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s, background .3s;
+}
+#dots button.on{opacity:1;background:var(--purple);transform:scale(1.45)}
+
+@media (max-width:420px){ .chip.title{display:none} }
+@media (prefers-reduced-motion:reduce){ *{animation-duration:.01ms!important;transition-duration:.15s!important} }
+</style>
+</head>
+<body>
+
+<!-- ================= ЭКРАН 1 ================= -->
+<section id="hero" class="screen active">
+  <canvas id="hearts" class="bg"></canvas>
+  <div class="hero-inner">
+    <span class="birthday-chip">С днём рождения, Диля! 🎂</span>
+    <h1 class="hero-title">
+      Диля, этот сайт я посвятила
+      <span class="accent">нашей с тобой недавней встрече в Москве.</span>
+      Смахни котика вверх для продолжения!!
+    </h1>
+  </div>
+
+  <div id="cat-zone">
+    <div id="cat-hint">↑ смахни котика вверх ↑</div>
+    <div id="cat" tabindex="0" role="button" aria-label="Поднять котика и перейти к фотографиям">
+      <!-- изящный силуэт сидящей кошки с милой мордашкой -->
+      <svg viewBox="0 0 200 210" fill="none">
+        <defs>
+          <linearGradient id="catGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#4c1d95"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="100" cy="200" rx="54" ry="6" fill="rgba(76,29,149,.14)"/>
+        <!-- хвост, обвитый вокруг лап -->
+        <path d="M149 186 C170 182 178 164 168 148 C165 143 158 145 160 151 C166 162 160 174 146 178 C142 180 142 186 149 186 Z" fill="url(#catGrad)"/>
+        <!-- тело и голова -->
+        <path d="M79 20
+                 C75 32 71 42 69 50
+                 C57 60 55 76 62 87
+                 C65 93 65 100 63 108
+                 C58 126 56 148 57 168
+                 C57 180 54 189 49 194
+                 C58 200 70 200 76 195
+                 C90 199 116 199 128 195
+                 C140 199 152 197 156 190
+                 C150 184 148 176 149 166
+                 C152 142 150 118 142 100
+                 C138 90 137 82 138 74
+                 C142 60 138 44 128 24
+                 C124 34 120 42 116 46
+                 C110 42 96 42 90 46
+                 C86 40 82 32 79 20 Z" fill="url(#catGrad)"/>
+        <!-- внутренние ушки -->
+        <path d="M79 27 L73 44 L88 42 Z" fill="#d8b4fe" opacity=".75"/>
+        <path d="M127 29 L118 44 L131 47 Z" fill="#d8b4fe" opacity=".75"/>
+        <!-- румяные щёчки -->
+        <ellipse cx="72" cy="84" rx="6.5" ry="3.6" fill="#f0abfc" opacity=".4"/>
+        <ellipse cx="128" cy="84" rx="6.5" ry="3.6" fill="#f0abfc" opacity=".4"/>
+        <!-- счастливые прикрытые глазки -->
+        <path d="M76 72 q8 -9 16 0 M108 72 q8 -9 16 0"
+              stroke="#ede9fe" stroke-width="3" stroke-linecap="round"/>
+        <!-- носик -->
+        <path d="M97 79 h6 l-3 4.5 Z" fill="#f9a8d4"/>
+        <!-- ротик «ω» -->
+        <path d="M92 87 q4 5 8 0 q4 5 8 0" stroke="#ede9fe" stroke-width="2.4" stroke-linecap="round"/>
+        <!-- усы -->
+        <path d="M60 78 L34 72 M60 84 L36 87 M140 78 L166 72 M140 84 L164 87"
+              stroke="#4c1d95" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ЭКРАН 2 ================= -->
+<section id="gallery" class="screen" aria-hidden="true">
+  <canvas id="disco" class="bg"></canvas>
+
+  <div class="topbar">
+    <button class="chip" id="back-btn">← котик</button>
+    <span class="chip title">Москва • ноябрь 2026</span>
+    <span class="chip" id="counter">1 / 15</span>
+  </div>
+
+  <div id="scene"><div id="tilt"></div></div>
+
+  <div id="desc-wrap">
+    <div id="desc-clip">
+      <div id="desc-card">
+        <span id="desc-label">фото 1</span>
+        <p id="desc-text"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="controls">
+    <button class="nav-btn" id="prev-btn" aria-label="Предыдущее фото">
+      <svg viewBox="0 0 24 24"><path d="M15 5 L8 12 L15 19"/></svg>
+    </button>
+    <div id="dots"></div>
+    <button class="nav-btn" id="next-btn" aria-label="Следующее фото">
+      <svg viewBox="0 0 24 24"><path d="M9 5 L16 12 L9 19"/></svg>
+    </button>
+  </div>
+</section>
+
+<noscript><p style="padding:20px;text-align:center">Для работы сайта включи JavaScript 💜</p></noscript>
+
+<script>
+"use strict";
+/* ============================================================
+   ДАННЫЕ ФОТОГРАФИЙ
+   img  — путь к файлу в папке images (1.jpg … 15.jpg)
+   g    — нежный градиент-заглушка, пока фото грузится
+   caption — текст описания под фото
+============================================================ */
+const PHOTOS = [
+  { img:'images/1.jpg',  g:['#8b5cf6','#6366f1'], caption:'Наша встреча спустя 2 года разлуки' },
+  { img:'images/2.jpg',  g:['#7dd3fc','#38bdf8'], caption:'Первый поход в кафешку🧁' },
+  { img:'images/3.jpg',  g:['#c084fc','#a855f7'], caption:'Ночная Москва невероятна, но даже она не сравнится с тобой.' },
+  { img:'images/4.jpg',  g:['#93c5fd','#60a5fa'], caption:'💋💋💋' },
+  { img:'images/5.jpg',  g:['#a5b4fc','#818cf8'], caption:'Мне так нравится как тут вышла, твоя улыбка завораживает' },
+  { img:'images/6.jpg',  g:['#d8b4fe','#c084fc'], caption:'Мои любимые селфи - это селфи с тобой' },
+  { img:'images/7.jpg',  g:['#67e8f9','#22d3ee'], caption:'Какие мы булочки ^^' },
+  { img:'images/8.jpg',  g:['#818cf8','#6366f1'], caption:'Я не могу описать словами насколько ты очаровательна...' },
+  { img:'images/9.jpg',  g:['#c4b5fd','#a78bfa'], caption:'Посмотри что за красотка в зеркале ))' },
+  { img:'images/10.jpg', g:['#7dd3fc','#0ea5e9'], caption:'Бедный желейный котик, который подвергся пыткам😥' },
+  { img:'images/11.jpg', g:['#a78bfa','#8b5cf6'], caption:'Инстаграм модели прям😏' },
+  { img:'images/12.jpg', g:['#93c5fd','#3b82f6'], caption:'Без зеркал никудаа' },
+  { img:'images/13.jpg', g:['#e9d5ff','#c084fc'], caption:'Фоткаться ночью особый вайб))' },
+  { img:'images/14.jpg', g:['#67e8f9','#06b6d4'], caption:'Тут ты пьяная весь вечер гуляла по туалетам 😄' },
+  { img:'images/15.jpg', g:['#8b5cf6','#7c3aed'], caption:'И вставлю этот кринж) надеюсь ты этот сайт больше никому не покажешь хехех' },
+];
+const N = PHOTOS.length;
+const STEP = 360 / N;
+const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const THR = 0.0009;                        // порог остановки (град/мс)
+
+/* наклон кольца «вид сверху» */
+const TILT = -10;
+const ST = Math.sin(Math.abs(TILT) * Math.PI / 180);
+const CT = Math.cos(Math.abs(TILT) * Math.PI / 180);
+
+/* насколько кольцо шире по горизонтали (эллипс «свободнее») */
+const WIDTH_STRETCH = 1.5;
+
+const hero    = document.getElementById('hero');
+const gal     = document.getElementById('gallery');
+const cat     = document.getElementById('cat');
+const scene   = document.getElementById('scene');
+const tilt    = document.getElementById('tilt');
+const descW   = document.getElementById('desc-wrap');
+const descLbl = document.getElementById('desc-label');
+const descTxt = document.getElementById('desc-text');
+const counter = document.getElementById('counter');
+const dotsBox = document.getElementById('dots');
+
+/* ---------- построение карусели ----------
+   Каждая карточка получает размер под ПРОПОРЦИИ своего фото:
+   фото не кропится и не сжимается, показывается целиком. */
+const cards = [];
+PHOTOS.forEach((p, i) => {
+  const card  = document.createElement('div');
+  const inner = document.createElement('div');
+  card.className = 'card'; inner.className = 'card3d';
+
+  const front = document.createElement('div');
+  front.className = 'face front';
+  front.style.background = `linear-gradient(150deg, ${p.g[0]}, ${p.g[1]})`; // заглушка на время загрузки
+  const im = document.createElement('img');
+  im.src = p.img; im.alt = p.caption; im.draggable = false;
+  front.appendChild(im);
+
+  const back = document.createElement('div');
+  back.className = 'face back';
+  back.innerHTML = `<span class="b-heart">💜</span><span class="b-text">Москва • 2026</span>`;
+
+  inner.append(front, back);
+  card.appendChild(inner);
+  tilt.appendChild(card);
+
+  const c = { el: card, inner, tiltZ: Math.random() * 3 - 1.5, ratio: 0.75 };
+  cards.push(c);
+
+  /* как только фото загрузилось — узнаём его настоящие пропорции */
+  im.addEventListener('load', () => {
+    if (im.naturalWidth && im.naturalHeight) {
+      c.ratio = im.naturalWidth / im.naturalHeight;
+      sizeCard(c);
+    }
+  });
+});
+
+/* размер карточки = фото целиком, вписанное в рамку экрана */
+function sizeCard(c) {
+  const r = c.ratio;
+  const maxW = CW * (r > 1 ? 1.3 : 1);   // пейзажным чуть больше ширины
+  const maxH = CH;
+  let w = Math.min(maxW, maxH * r);
+  let h = w / r;
+  if (h > maxH) { h = maxH; w = h * r; }
+  const st = c.el.style;
+  st.width  = w.toFixed(1) + 'px';
+  st.height = h.toFixed(1) + 'px';
+  st.marginLeft = (-w / 2).toFixed(1) + 'px';
+  st.marginTop  = (-h / 2).toFixed(1) + 'px';
+}
+
+const dots = PHOTOS.map((_, i) => {
+  const b = document.createElement('button');
+  b.setAttribute('aria-label', 'Фото ' + (i + 1));
+  b.addEventListener('click', () => goTo(i));
+  dotsBox.appendChild(b);
+  return b;
+});
+
+/* ---------- адаптивная геометрия ---------- */
+let CW = 200, CH = 256, RX = 500, RZ = 400, SENS = 0.12;
+function resize() {
+  const vw = innerWidth, vh = innerHeight;
+  CW = Math.max(88, Math.min(vw * 0.26, vh * 0.24, 210));
+  CH = CW * 1.28;
+
+  const fit = vw * 0.42 - 0.55 * CW;
+  RZ = Math.max(1.25 * CW, Math.min(2.6 * CW, fit));
+
+  const maxRX = vw * 0.5 - Math.max(12, CW * 0.2);
+  RX = Math.min(RZ * WIDTH_STRETCH, maxRX);
+  RX = Math.max(RX, Math.min(RZ, maxRX));
+
+  SENS = STEP / CW;
+  document.documentElement.style.setProperty('--cw', CW + 'px');
+  document.documentElement.style.setProperty('--ch', CH + 'px');
+  cards.forEach(sizeCard);
+  sizeCanvas(heartsC); sizeCanvas(discoC);
+}
+
+/* ---------- физика вращения ---------- */
+let rot = 0, vel = 0, spinK = 0.003, mode = 'idle';
+let tween = null, curIdx = 0;
+const mod = (n, m) => ((n % m) + m) % m;
+const shortest = d => ((d % 360) + 540) % 360 - 180;
+const easeOut = p => 1 - Math.pow(1 - p, 3);
+const clampV = v => Math.max(-3, Math.min(3, v));
+
+function beginSnap() {
+  const idx = mod(Math.round(-rot / STEP), N);
+  const delta = shortest(-idx * STEP - rot);
+  tween = { from: rot, to: rot + delta, start: performance.now(),
+            dur: Math.max(260, Math.min(700, Math.abs(delta) * 9)) };
+  mode = 'tween';
+}
+function startSpin() {
+  const v = Math.abs(vel);
+  if (v < 0.02) { beginSnap(); return; }
+  const T = RM ? 900 : Math.min(5000, Math.max(600, v * 6500));
+  spinK = Math.log(v / THR) / T;
+  mode = 'spin';
+  closeDesc();
+}
+function goTo(i) {
+  const delta = shortest(-i * STEP - rot);
+  tween = { from: rot, to: rot + delta, start: performance.now(), dur: 620 };
+  vel = 0; mode = 'tween'; closeDesc();
+}
+function stepBy(d) { goTo(mod(curIdx + d, N)); }
+
+function onSettle() {
+  curIdx = mod(Math.round(-rot / STEP), N);
+  counter.textContent = (curIdx + 1) + ' / ' + N;
+  dots.forEach((d, i) => d.classList.toggle('on', i === curIdx));
+  openDesc(curIdx);
+}
+function openDesc(i) {
+  descLbl.textContent = 'фото ' + (i + 1);
+  descTxt.textContent = PHOTOS[i].caption;
+  descW.classList.remove('open');
+  void descW.offsetWidth;
+  requestAnimationFrame(() => descW.classList.add('open'));
+}
+function closeDesc() { descW.classList.remove('open'); }
+
+/* раскладка кольца: широкий эллипс + вид сверху + порядок друг за другом */
+function layoutCards() {
+  for (let i = 0; i < N; i++) {
+    const A   = (rot + i * STEP) * Math.PI / 180;
+    const sin = Math.sin(A), cos = Math.cos(A);
+    const s     = 1 + 0.28 * Math.pow(Math.max(0, cos), 3);
+    const sq    = 1 - 0.20 * Math.abs(sin);
+    const extra = sin * 6;
+    const x = sin * RX;
+    const y = cos * RZ * ST;
+    const z = cos * RZ * CT;
+    const c = cards[i];
+    c.el.style.transform =
+      `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,${z.toFixed(2)}px) rotateX(${TILT}deg) rotateY(${(rot + i * STEP + extra).toFixed(2)}deg) rotateZ(${c.tiltZ}deg)`;
+    c.inner.style.transform = `scale(${(s * sq).toFixed(3)},${s.toFixed(3)})`;
+    c.el.style.opacity = (0.82 + 0.18 * cos).toFixed(3);
+    c.el.style.zIndex = String(1000 + Math.round(cos * 500));
+  }
+}
+
+/* ---------- указатель на сцене + история движений ---------- */
+let dragX0 = 0, rot0 = 0, moved = 0, lastX = 0, lastT = 0, downT = 0, dragging = false;
+const hist = [];
+
+scene.addEventListener('pointerdown', e => {
+  dragging = true; moved = 0;
+  dragX0 = lastX = e.clientX; downT = lastT = performance.now();
+  rot0 = rot; vel = 0; mode = 'drag'; hist.length = 0;
+  hist.push({ x: lastX, t: lastT });
+  scene.setPointerCapture(e.pointerId);
+  closeDesc();
+});
+scene.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const now = performance.now();
+  moved += Math.abs(e.clientX - lastX);
+  rot = rot0 + (e.clientX - dragX0) * SENS;
+  lastX = e.clientX; lastT = now;
+  hist.push({ x: lastX, t: now });
+  while (hist.length > 2 && now - hist[0].t > 110) hist.shift();
+});
+function endDrag(e, canTap) {
+  if (!dragging) return;
+  dragging = false;
+
+  if (canTap && moved < 8 && performance.now() - downT < 400) {
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    const cardEl = el && el.closest('.card');
+    if (cardEl) { goTo(cards.findIndex(c => c.el === cardEl)); return; }
+  }
+
+  const dxTotal = lastX - dragX0;
+  const dRot    = rot - rot0;
+  let v0 = 0;
+  if (hist.length >= 2) {
+    const a = hist[0], dt = Math.max(1, lastT - a.t);
+    v0 = (lastX - a.x) * SENS / dt;
+  }
+  if (Math.abs(v0) < 0.15) {
+    if (Math.abs(dxTotal) > 14) stepBy(dRot > 0 ? -1 : 1);
+    else beginSnap();
+  } else {
+    vel = clampV(v0);
+    startSpin();
+  }
+}
+scene.addEventListener('pointerup',     e => endDrag(e, true));
+scene.addEventListener('pointercancel', e => endDrag(e, false));
+
+scene.addEventListener('wheel', e => {
+  e.preventDefault();
+  vel = clampV(vel + e.deltaY * 0.0011);
+  if (mode !== 'spin') startSpin();
+}, { passive: false });
+
+document.getElementById('prev-btn').addEventListener('click', () => stepBy(-1));
+document.getElementById('next-btn').addEventListener('click', () => stepBy(1));
+addEventListener('keydown', e => {
+  if (!gal.classList.contains('active')) return;
+  if (e.key === 'ArrowRight') stepBy(1);
+  if (e.key === 'ArrowLeft')  stepBy(-1);
+});
+
+/* ---------- котик ---------- */
+let catDrag = false, catY0 = 0, catDy = 0, catV = 0, catLastY = 0, catLastT = 0;
+cat.addEventListener('pointerdown', e => {
+  catDrag = true; catY0 = catLastY = e.clientY; catLastT = performance.now();
+  catV = 0; cat.classList.add('no-anim');
+  cat.setPointerCapture(e.pointerId);
+  e.preventDefault();
+});
+cat.addEventListener('pointermove', e => {
+  if (!catDrag) return;
+  const now = performance.now();
+  catDy = Math.max(-innerHeight * 0.75, Math.min(12, e.clientY - catY0));
+  catV  = catV * 0.6 + ((e.clientY - catLastY) / Math.max(1, now - catLastT)) * 0.4;
+  catLastY = e.clientY; catLastT = now;
+  cat.style.transform = `translateY(${catDy}px) rotate(${catDy * 0.06}deg)`;
+});
+function catUp() {
+  if (!catDrag) return;
+  catDrag = false;
+  cat.classList.remove('no-anim');
+  const flick = performance.now() - catLastT < 70 && catV < -0.75;
+  if (catDy < -140 || flick) {
+    cat.style.transform = '';
+    cat.classList.add('launch');
+    setTimeout(goGallery, 380);
+  } else cat.style.transform = '';
+  catDy = 0;
+}
+cat.addEventListener('pointerup', catUp);
+cat.addEventListener('pointercancel', catUp);
+cat.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); cat.classList.add('launch'); setTimeout(goGallery, 380); }
+});
+
+/* ---------- экраны ---------- */
+function goGallery() {
+  hero.classList.remove('active'); hero.classList.add('above');
+  gal.classList.add('active'); gal.setAttribute('aria-hidden', 'false');
+  resize();
+  setTimeout(onSettle, 750);
+}
+document.getElementById('back-btn').addEventListener('click', () => {
+  gal.classList.remove('active'); gal.setAttribute('aria-hidden', 'true');
+  hero.classList.remove('above'); hero.classList.add('active');
+  cat.classList.remove('launch'); cat.style.transform = '';
+  closeDesc();
+});
+
+/* ---------- фоны ---------- */
+const heartsC = document.getElementById('hearts');
+const discoC  = document.getElementById('disco');
+const hCtx = heartsC.getContext('2d');
+const dCtx = discoC.getContext('2d');
+function sizeCanvas(cv) {
+  const dpr = Math.min(2, devicePixelRatio || 1);
+  cv.width  = innerWidth  * dpr;
+  cv.height = innerHeight * dpr;
+  cv.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+const H_COLORS = ['#7c9ff5','#8b5cf6','#b39df9','#8fd0ff','#a5b4fc','#c084fc'];
+const hearts = Array.from({ length: RM ? 7 : 26 }, () => ({
+  x: Math.random(), y: Math.random(), s: 9 + Math.random() * 17,
+  v: (0.02 + Math.random() * 0.05) * (RM ? 0.3 : 1),
+  sw: Math.random() * Math.PI * 2, r: Math.random() * 0.6 - 0.3,
+  c: H_COLORS[Math.random() * H_COLORS.length | 0], a: 0.3 + Math.random() * 0.45,
+}));
+function drawHearts(dt) {
+  hCtx.clearRect(0, 0, innerWidth, innerHeight);
+  for (const h of hearts) {
+    h.y -= h.v * dt / 1000; h.sw += dt / 900;
+    if (h.y < -0.08) { h.y = 1.08; h.x = Math.random(); }
+    const x = h.x * innerWidth + Math.sin(h.sw) * 26, y = h.y * innerHeight, s = h.s;
+    hCtx.save(); hCtx.translate(x, y); hCtx.rotate(h.r + Math.sin(h.sw) * 0.15);
+    hCtx.globalAlpha = h.a; hCtx.fillStyle = h.c;
+    hCtx.beginPath();
+    hCtx.moveTo(0, s * 0.45);
+    hCtx.bezierCurveTo(-s * 0.55, s * 0.05, -s * 0.45, -s * 0.45, 0, -s * 0.15);
+    hCtx.bezierCurveTo( s * 0.45, -s * 0.45,  s * 0.55, s * 0.05, 0, s * 0.45);
+    hCtx.fill(); hCtx.restore();
+  }
+}
+const D_HUES = [285, 320, 262, 210, 190, 340, 45];
+const discos = Array.from({ length: RM ? 8 : 24 }, () => ({
+  x: Math.random(), y: Math.random(), r: 22 + Math.random() * 90,
+  vx: (Math.random() - 0.5) * 0.02 * (RM ? 0.3 : 1),
+  vy: (Math.random() - 0.5) * 0.016 * (RM ? 0.3 : 1),
+  h: D_HUES[Math.random() * D_HUES.length | 0],
+  a: 0.08 + Math.random() * 0.14, p: Math.random() * Math.PI * 2,
+}));
+function drawDisco(dt, t) {
+  dCtx.clearRect(0, 0, innerWidth, innerHeight);
+  for (const d of discos) {
+    d.x += d.vx * dt / 1000; d.y += d.vy * dt / 1000;
+    if (d.x < -0.15) d.x = 1.15; if (d.x > 1.15) d.x = -0.15;
+    if (d.y < -0.15) d.y = 1.15; if (d.y > 1.15) d.y = -0.15;
+    const r = d.r * (1 + Math.sin(t / 1400 + d.p) * 0.12);
+    const x = d.x * innerWidth, y = d.y * innerHeight;
+    const g = dCtx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0,   `hsla(${d.h},90%,62%,${d.a})`);
+    g.addColorStop(0.7, `hsla(${d.h},90%,62%,${d.a * 0.55})`);
+    g.addColorStop(1,   `hsla(${d.h},90%,62%,0)`);
+    dCtx.fillStyle = g;
+    dCtx.beginPath(); dCtx.arc(x, y, r, 0, Math.PI * 2); dCtx.fill();
+  }
+}
+
+/* ---------- главный цикл ---------- */
+let last = performance.now();
+function frame(t) {
+  const dt = Math.min(50, t - last); last = t;
+  if (hero.classList.contains('active')) drawHearts(dt);
+  if (gal.classList.contains('active'))  drawDisco(dt, t);
+
+  if (gal.classList.contains('active')) {
+    if (mode === 'spin') {
+      rot += vel * dt;
+      vel *= Math.exp(-spinK * dt);
+      if (Math.abs(vel) < THR) { vel = 0; beginSnap(); }
+    } else if (mode === 'tween' && tween) {
+      const p = (t - tween.start) / tween.dur;
+      if (p >= 1) { rot = tween.to; tween = null; mode = 'idle'; onSettle(); }
+      else rot = tween.from + (tween.to - tween.from) * easeOut(p);
+    }
+    layoutCards();
+  }
+  requestAnimationFrame(frame);
+}
+
+resize();
+addEventListener('resize', resize);
+addEventListener('orientationchange', resize);
+onSettle();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
